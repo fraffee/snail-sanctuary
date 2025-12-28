@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import Sanctuary from './components/Sanctuary';
-import Modal from './components/Modal';
-import { SnailData } from './types';
-import { ASSETS } from './constants';
+import Sanctuary from './components/Sanctuary.tsx';
+import Modal from './components/Modal.tsx';
+import { SnailData } from './types.ts';
+import { ASSETS } from './constants.ts';
 
 const App: React.FC = () => {
   const [selectedSnail, setSelectedSnail] = useState<SnailData | null>(null);
@@ -11,7 +11,6 @@ const App: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const clickAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio elements
   useEffect(() => {
     audioRef.current = new Audio(ASSETS.sounds.nature);
     audioRef.current.loop = true;
@@ -28,7 +27,6 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // Sync mute state
   useEffect(() => {
     if (!audioRef.current) return;
     
@@ -73,7 +71,6 @@ const App: React.FC = () => {
         onClose={handleCloseModal}
       />
       
-      {/* Global CSS for minimal UI feel */}
       <style>{`
         * {
           -webkit-tap-highlight-color: transparent;
