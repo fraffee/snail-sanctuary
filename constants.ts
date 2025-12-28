@@ -1,8 +1,7 @@
 
-import { SnailData } from './types';
+import { SnailData } from './types.ts';
 
 export const ASSETS = {
-  // These paths look for files in the same folder as your index.html on GitHub
   background: './background.png', 
   snails: [
     './snail_1.png',
@@ -37,6 +36,6 @@ export const MOVEMENT_SETTINGS = {
   TURN_SPEED: 0.008,
   WANDER_STRENGTH: 0.03,
   BOUNDARY_PADDING: 120,
-  SNAIL_RADIUS: 80,       // Increased radius slightly for better visual separation
-  SEPARATION_FORCE: 0.15, // How firmly they push apart
+  SNAIL_RADIUS: 80,
+  SEPARATION_FORCE: 0.15,
 };
