@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SnailData, Vector2 } from '../types';
+import { SnailData, Vector2 } from '../types.ts';
 
 interface SnailProps {
   data: SnailData;
@@ -26,7 +26,6 @@ const Snail: React.FC<SnailProps> = ({ data, position, angle, isPaused, onClick 
         src={data.image}
         alt={`Snail ${data.id}`}
         onError={(e) => {
-          // Fallback if local file is missing
           (e.target as HTMLImageElement).src = 'https://img.icons8.com/color/144/snail.png';
         }}
         className="w-20 h-20 md:w-28 md:h-28 drop-shadow-md pointer-events-none"
