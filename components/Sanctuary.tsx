@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Snail from './Snail';
-import { ASSETS, SNAILS_CONFIG, MOVEMENT_SETTINGS } from '../constants';
-import { SnailData, SnailState, Vector2 } from '../types';
+import Snail from './Snail.tsx';
+import { ASSETS, SNAILS_CONFIG, MOVEMENT_SETTINGS } from '../constants.ts';
+import { SnailData, SnailState, Vector2 } from '../types.ts';
 import { Volume2, VolumeX } from 'lucide-react';
 
 interface SanctuaryProps {
@@ -18,7 +18,6 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
   isMuted, 
   onToggleMute 
 }) => {
-  // Initialize snail states
   const [snails, setSnails] = useState<SnailState[]>(() => 
     SNAILS_CONFIG.map((cfg) => ({
       id: cfg.id,
@@ -41,18 +40,15 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
 
     setSnails((prevSnails) => {
       return prevSnails.map((snail) => {
-        // If this snail is currently clicked/paused, don't update its position
         if (snail.id === activeSnailId) return snail;
 
         let { x, y } = snail.position;
         let { angle, targetAngle, speed } = snail;
 
-        // 1. WANDER: Occasionally shift target angle
         if (Math.random() < 0.01) {
           targetAngle += (Math.random() - 0.5) * Math.PI * 0.7;
         }
 
-        // 2. AVOID OVERLAP: Check against other snails
         prevSnails.forEach((other) => {
           if (snail.id === other.id) return;
           
@@ -62,27 +58,21 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
           const minDistance = MOVEMENT_SETTINGS.SNAIL_RADIUS * 1.5;
 
           if (distance < minDistance) {
-            // Push away logic
             const angleToOther = Math.atan2(dy, dx);
-            // Turn away from the other snail
             targetAngle = angleToOther + Math.PI + (Math.random() - 0.5) * 0.5;
             
-            // Subtle positional push to prevent overlapping
             const pushMagnitude = (minDistance - distance) * MOVEMENT_SETTINGS.SEPARATION_FORCE;
             x -= Math.cos(angleToOther) * pushMagnitude;
             y -= Math.sin(angleToOther) * pushMagnitude;
           }
         });
 
-        // 3. BOUNDARY CHECK: Turn back if hitting edges
         const pad = MOVEMENT_SETTINGS.BOUNDARY_PADDING;
         if (x < pad || x > window.innerWidth - pad || y < pad || y > window.innerHeight - pad) {
           targetAngle = Math.atan2(window.innerHeight / 2 - y, window.innerWidth / 2 - x);
         }
 
-        // 4. INTEGRATION: Smoothly rotate and move
         const angleDiff = targetAngle - angle;
-        // Normalize angle difference to -PI to PI
         const normalizedDiff = Math.atan2(Math.sin(angleDiff), Math.cos(angleDiff));
         angle += normalizedDiff * MOVEMENT_SETTINGS.TURN_SPEED;
 
@@ -110,7 +100,6 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-emerald-950 select-none">
-      {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
         style={{ 
@@ -120,10 +109,8 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
         }}
       />
 
-      {/* Subtle garden floor texture overlay */}
       <div className="absolute inset-0 pointer-events-none bg-black/10 mix-blend-overlay" />
 
-      {/* Snail Population */}
       {snails.map((snailState) => {
         const config = SNAILS_CONFIG.find(c => c.id === snailState.id)!;
         return (
@@ -138,7 +125,6 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
         );
       })}
       
-      {/* UI Elements */}
       <div className="absolute top-10 left-10 z-20 pointer-events-none select-none">
         <h1 className="text-4xl md:text-5xl font-extralight text-white/40 tracking-[0.2em] uppercase">
           The Snail Sanctuary
@@ -148,11 +134,9 @@ const Sanctuary: React.FC<SanctuaryProps> = ({
         </p>
       </div>
 
-      {/* Sound Toggle */}
       <button 
         onClick={onToggleMute}
         className="absolute bottom-10 left-10 z-30 p-4 bg-white/5 hover:bg-white/10 rounded-full text-white/40 transition-all border border-white/10 backdrop-blur-md group"
-        title={isMuted ? "Unmute Ambient Sounds" : "Mute Ambient Sounds"}
       >
         {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} className="group-hover:scale-110 transition-transform" />}
       </button>
